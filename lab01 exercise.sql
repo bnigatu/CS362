@@ -87,15 +87,22 @@ ORDER BY Area DESC;
  *==============================================================================*/
 -- hint use dbo.Economy Table and a subquery
 /* A5 */
-select *
-from dbo.Economy
-where  (select count( distinct cnt.GDP )
-			from dbo.Economy as cnt
-			where Economy.GDP <= cnt.GDP) between 8 and 20
-order by GDP desc;
-
-
-
+--Method1
+SELECT *
+FROM dbo.Economy
+WHERE  (SELECT COUNT(Country) as cnt
+		  FROM dbo.Economy AS e
+		  WHERE Economy.GDP < e.GDP and
+		  e.GDP is not null 			
+		) between 7 and 19
+		and Economy.GDP is not null
+ORDER BY GDP DESC;
+-- Method 2
+SELECT *
+FROM dbo.Economy
+ORDER BY GDP DESC
+OFFSET 7 ROWS
+FETCH NEXT 13 ROWS ONLY;
 						
 
 
